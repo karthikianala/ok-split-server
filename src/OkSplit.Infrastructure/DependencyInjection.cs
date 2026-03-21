@@ -7,7 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OkSplit.Application.Interfaces;
 using OkSplit.Domain.Entities;
+using OkSplit.Domain.Interfaces;
 using OkSplit.Infrastructure.Data;
+using OkSplit.Infrastructure.Repositories;
 using OkSplit.Infrastructure.Services;
 
 namespace OkSplit.Infrastructure;
@@ -54,6 +56,9 @@ public static class DependencyInjection
                 ClockSkew = TimeSpan.Zero
             };
         });
+
+        // Repositories
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Services
         services.AddScoped<ITokenService, TokenService>();

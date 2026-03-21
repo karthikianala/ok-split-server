@@ -32,7 +32,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Middleware pipeline
+// Middleware pipeline — CORS must be first
+app.UseCors();
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
@@ -41,8 +43,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();

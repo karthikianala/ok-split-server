@@ -7,6 +7,9 @@ namespace OkSplit.Infrastructure.Data;
 
 public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
+    public DbSet<Group> Groups => Set<Group>();
+    public DbSet<GroupMember> GroupMembers => Set<GroupMember>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
