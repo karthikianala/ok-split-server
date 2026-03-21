@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DD6E24C1-E476-45E7-88DC-82C0C7431043}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OkSplit.Domain", "src/OkSplit.Domain\OkSplit.Domain.csproj", "{22A8DE27-B088-477F-B376-17742AED6C5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OkSplit.Application", "src/OkSplit.Application\OkSplit.Application.csproj", "{91FF6589-1E55-44BE-8B5C-9B37F68B887E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OkSplit.Infrastructure", "src/OkSplit.Infrastructure\OkSplit.Infrastructure.csproj", "{273EF735-F6BB-415E-90C1-E5ED2A90C294}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OkSplit.API", "src/OkSplit.API\OkSplit.API.csproj", "{8DE50F79-2263-43C5-8ED3-EEEE8CF8A109}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22A8DE27-B088-477F-B376-17742AED6C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22A8DE27-B088-477F-B376-17742AED6C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22A8DE27-B088-477F-B376-17742AED6C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22A8DE27-B088-477F-B376-17742AED6C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91FF6589-1E55-44BE-8B5C-9B37F68B887E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91FF6589-1E55-44BE-8B5C-9B37F68B887E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91FF6589-1E55-44BE-8B5C-9B37F68B887E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91FF6589-1E55-44BE-8B5C-9B37F68B887E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{273EF735-F6BB-415E-90C1-E5ED2A90C294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{273EF735-F6BB-415E-90C1-E5ED2A90C294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{273EF735-F6BB-415E-90C1-E5ED2A90C294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{273EF735-F6BB-415E-90C1-E5ED2A90C294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE50F79-2263-43C5-8ED3-EEEE8CF8A109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE50F79-2263-43C5-8ED3-EEEE8CF8A109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE50F79-2263-43C5-8ED3-EEEE8CF8A109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE50F79-2263-43C5-8ED3-EEEE8CF8A109}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{22A8DE27-B088-477F-B376-17742AED6C5A} = {DD6E24C1-E476-45E7-88DC-82C0C7431043}
+		{91FF6589-1E55-44BE-8B5C-9B37F68B887E} = {DD6E24C1-E476-45E7-88DC-82C0C7431043}
+		{273EF735-F6BB-415E-90C1-E5ED2A90C294} = {DD6E24C1-E476-45E7-88DC-82C0C7431043}
+		{8DE50F79-2263-43C5-8ED3-EEEE8CF8A109} = {DD6E24C1-E476-45E7-88DC-82C0C7431043}
+	EndGlobalSection
+EndGlobal
