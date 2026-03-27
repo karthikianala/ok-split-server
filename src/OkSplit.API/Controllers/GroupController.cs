@@ -12,10 +12,12 @@ namespace OkSplit.API.Controllers;
 public class GroupController : ControllerBase
 {
     private readonly IGroupService _groupService;
+    private readonly IExpenseService _expenseService;
 
-    public GroupController(IGroupService groupService)
+    public GroupController(IGroupService groupService, IExpenseService expenseService)
     {
         _groupService = groupService;
+        _expenseService = expenseService;
     }
 
     [HttpPost]
@@ -72,6 +74,20 @@ public class GroupController : ControllerBase
     {
         var result = await _groupService.UpdateMemberRoleAsync(GetUserId(), id, userId, dto);
         return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/balances")]
+    public async Task<IActionResult> GetBalances(Guid id)
+    {
+        var balances = await _expenseService.GetGroupBalancesAsync(GetUserId(), id);
+        return Ok(new { balances });
+    }
+
+    [HttpGet("{id:guid}/simplified-debts")]
+    public async Task<IActionResult> GetSimplifiedDebts(Guid id)
+    {
+        var debts = await _expenseService.GetSimplifiedDebtsAsync(GetUserId(), id);
+        return Ok(new { debts });
     }
 
     private Guid GetUserId()

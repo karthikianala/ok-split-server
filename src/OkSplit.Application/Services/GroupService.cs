@@ -121,6 +121,11 @@ public class GroupService : IGroupService
 
         group.Members.Add(member);
         group.UpdatedAt = DateTime.UtcNow;
+
+        await ActivityLogger.LogAsync(_unitOfWork, groupId, userId,
+            "member_joined", "Group", groupId,
+            $"{targetUser.FullName} was added to the group");
+
         await _unitOfWork.SaveChangesAsync();
 
         return new MemberDto
@@ -152,8 +157,14 @@ public class GroupService : IGroupService
         if (userId != targetUserId)
             EnsureAdmin(group, userId);
 
+        var memberName = member.User.FullName;
         group.Members.Remove(member);
         group.UpdatedAt = DateTime.UtcNow;
+
+        await ActivityLogger.LogAsync(_unitOfWork, groupId, userId,
+            "member_left", "Group", groupId,
+            $"{memberName} was removed from the group");
+
         await _unitOfWork.SaveChangesAsync();
     }
 

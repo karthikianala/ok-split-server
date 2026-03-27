@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OkSplit.Infrastructure.Data;
@@ -11,9 +12,11 @@ using OkSplit.Infrastructure.Data;
 namespace OkSplit.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260322091455_AddExpenses")]
+    partial class AddExpenses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,57 +154,6 @@ namespace OkSplit.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", "public");
-                });
-
-            modelBuilder.Entity("OkSplit.Domain.Entities.ActivityLog", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<Guid>("EntityId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("jsonb");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt")
-                        .IsDescending();
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("activity_logs", "public");
                 });
 
             modelBuilder.Entity("OkSplit.Domain.Entities.Expense", b =>
@@ -384,127 +336,6 @@ namespace OkSplit.Infrastructure.Migrations
                     b.ToTable("group_members", "public");
                 });
 
-            modelBuilder.Entity("OkSplit.Domain.Entities.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(12, 2)
-                        .HasColumnType("numeric(12,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(3)
-                        .HasColumnType("character varying(3)")
-                        .HasDefaultValue("INR");
-
-                    b.Property<string>("RazorpayOrderId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("RazorpayPaymentId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("RazorpaySignature")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<Guid>("SettlementId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasDefaultValue("Created");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SettlementId")
-                        .IsUnique();
-
-                    b.ToTable("payments", "public");
-                });
-
-            modelBuilder.Entity("OkSplit.Domain.Entities.Settlement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(12, 2)
-                        .HasColumnType("numeric(12,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("PaidBy")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("PaidTo")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<string>("RazorpayOrderId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("RazorpayPaymentId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("SettledAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasDefaultValue("Pending");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
-
-                    b.HasIndex("PaidBy");
-
-                    b.HasIndex("PaidTo");
-
-                    b.ToTable("settlements", "public");
-                });
-
             modelBuilder.Entity("OkSplit.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -651,25 +482,6 @@ namespace OkSplit.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OkSplit.Domain.Entities.ActivityLog", b =>
-                {
-                    b.HasOne("OkSplit.Domain.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OkSplit.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("OkSplit.Domain.Entities.Expense", b =>
                 {
                     b.HasOne("OkSplit.Domain.Entities.Group", "Group")
@@ -738,44 +550,6 @@ namespace OkSplit.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OkSplit.Domain.Entities.Payment", b =>
-                {
-                    b.HasOne("OkSplit.Domain.Entities.Settlement", "Settlement")
-                        .WithOne("Payment")
-                        .HasForeignKey("OkSplit.Domain.Entities.Payment", "SettlementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Settlement");
-                });
-
-            modelBuilder.Entity("OkSplit.Domain.Entities.Settlement", b =>
-                {
-                    b.HasOne("OkSplit.Domain.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("OkSplit.Domain.Entities.User", "PaidByUser")
-                        .WithMany()
-                        .HasForeignKey("PaidBy")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("OkSplit.Domain.Entities.User", "PaidToUser")
-                        .WithMany()
-                        .HasForeignKey("PaidTo")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Group");
-
-                    b.Navigation("PaidByUser");
-
-                    b.Navigation("PaidToUser");
-                });
-
             modelBuilder.Entity("OkSplit.Domain.Entities.Expense", b =>
                 {
                     b.Navigation("Splits");
@@ -784,11 +558,6 @@ namespace OkSplit.Infrastructure.Migrations
             modelBuilder.Entity("OkSplit.Domain.Entities.Group", b =>
                 {
                     b.Navigation("Members");
-                });
-
-            modelBuilder.Entity("OkSplit.Domain.Entities.Settlement", b =>
-                {
-                    b.Navigation("Payment");
                 });
 #pragma warning restore 612, 618
         }

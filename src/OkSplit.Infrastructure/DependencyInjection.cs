@@ -62,6 +62,8 @@ public static class DependencyInjection
 
         // Services
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IPaymentGatewayService, RazorpayService>();
+        services.AddScoped<ICloudinaryService, CloudinaryService>();
 
         return services;
     }
