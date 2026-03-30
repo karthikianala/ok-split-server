@@ -1,3 +1,4 @@
+using OkSplit.API.Filters;
 using OkSplit.API.Hubs;
 using OkSplit.API.Middleware;
 using OkSplit.API.Services;
@@ -27,7 +28,10 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+});
 
 // SignalR
 builder.Services.AddSignalR();

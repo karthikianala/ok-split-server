@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using OkSplit.Application.DTOs.Analytics;
 using OkSplit.Application.Interfaces;
-using OkSplit.Domain.Enums;
+using OkSplit.Domain.Entities;
 using OkSplit.Domain.Interfaces;
 
 namespace OkSplit.Application.Services;
@@ -18,12 +17,12 @@ public class AnalyticsService : IAnalyticsService
     public async Task<List<MonthlyBreakdownDto>> GetMonthlyBreakdownAsync(
         Guid userId, Guid? groupId, DateTime startDate, DateTime endDate)
     {
-        var expenses = await GetUserExpensesQuery(userId, groupId)
+        var expenses = await GetUserExpensesAsync(userId, groupId);
+        expenses = expenses
             .Where(e => e.CreatedAt >= startDate && e.CreatedAt <= endDate)
-            .Include(e => e.Splits)
-            .ToListAsync();
+            .ToList();
 
-        var grouped = expenses
+        return expenses
             .GroupBy(e => e.CreatedAt.ToString("yyyy-MM"))
             .Select(g => new MonthlyBreakdownDto
             {
@@ -36,21 +35,17 @@ public class AnalyticsService : IAnalyticsService
             })
             .OrderBy(m => m.Month)
             .ToList();
-
-        return grouped;
     }
 
     public async Task<List<CategorySpendDto>> GetCategorySpendAsync(
         Guid userId, Guid? groupId, DateTime? startDate, DateTime? endDate)
     {
-        var query = GetUserExpensesQuery(userId, groupId);
+        var expenses = await GetUserExpensesAsync(userId, groupId);
 
-        if (startDate.HasValue) query = query.Where(e => e.CreatedAt >= startDate.Value);
-        if (endDate.HasValue) query = query.Where(e => e.CreatedAt <= endDate.Value);
+        if (startDate.HasValue) expenses = expenses.Where(e => e.CreatedAt >= startDate.Value).ToList();
+        if (endDate.HasValue) expenses = expenses.Where(e => e.CreatedAt <= endDate.Value).ToList();
 
-        var expenses = await query.ToListAsync();
         var total = expenses.Sum(e => e.Amount);
-
         if (total == 0) return new List<CategorySpendDto>();
 
         return expenses
@@ -101,21 +96,19 @@ public class AnalyticsService : IAnalyticsService
 
     public async Task<PersonalSummaryDto> GetPersonalSummaryAsync(Guid userId)
     {
-        // Get all groups user is member of
         var (groups, _) = await _unitOfWork.Groups.GetUserGroupsAsync(userId, 1, 1000);
-        var groupIds = groups.Select(g => g.Id).ToList();
 
-        decimal totalOwed = 0;  // Others owe you
-        decimal totalOwe = 0;   // You owe others
+        decimal totalOwed = 0;
+        decimal totalOwe = 0;
         int expenseCount = 0;
 
-        foreach (var groupId in groupIds)
+        foreach (var g in groups)
         {
-            var group = await _unitOfWork.Groups.GetByIdWithMembersAsync(groupId);
+            var group = await _unitOfWork.Groups.GetByIdWithMembersAsync(g.Id);
             if (group == null) continue;
 
-            var expenses = await _unitOfWork.Expenses.GetByGroupIdAsync(groupId);
-            var settlements = await _unitOfWork.Settlements.GetCompletedByGroupAsync(groupId);
+            var expenses = await _unitOfWork.Expenses.GetByGroupIdAsync(g.Id);
+            var settlements = await _unitOfWork.Settlements.GetCompletedByGroupAsync(g.Id);
             var memberNames = group.Members.ToDictionary(m => m.UserId, m => m.User.FullName);
 
             var balances = DebtSimplificationService.CalculateBalances(expenses, settlements, memberNames);
@@ -140,15 +133,23 @@ public class AnalyticsService : IAnalyticsService
         };
     }
 
-    private IQueryable<Domain.Entities.Expense> GetUserExpensesQuery(Guid userId, Guid? groupId)
+    private async Task<List<Expense>> GetUserExpensesAsync(Guid userId, Guid? groupId)
     {
         if (groupId.HasValue)
         {
-            return _unitOfWork.Expenses.GetByGroupIdAsync(groupId.Value).Result.AsQueryable();
+            return await _unitOfWork.Expenses.GetByGroupIdAsync(groupId.Value);
         }
 
-        // All expenses across user's groups — we need to do this via DbContext
-        // For now, return empty and handle in callers
-        return Enumerable.Empty<Domain.Entities.Expense>().AsQueryable();
+        // Fetch expenses across all user's groups
+        var (groups, _) = await _unitOfWork.Groups.GetUserGroupsAsync(userId, 1, 1000);
+        var allExpenses = new List<Expense>();
+
+        foreach (var g in groups)
+        {
+            var expenses = await _unitOfWork.Expenses.GetByGroupIdAsync(g.Id);
+            allExpenses.AddRange(expenses);
+        }
+
+        return allExpenses;
     }
 }
